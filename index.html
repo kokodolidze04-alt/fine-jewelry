@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>Fine Jewelry</title>
+
+<meta
+    name="description"
+    content="AURELIA — timeless jewelry designed for everyday elegance."
+>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+    rel="stylesheet"
+>
+
+<link rel="stylesheet" href="style.css">
+
+
+</head>
+
+<body>
+
+
+<!-- Announcement -->
+<div class="announcement">
+    Complimentary shipping on orders over $150
+</div>
+
+
+<!-- Header -->
+<header class="site-header">
+
+    <div class="header-left">
+
+        <button
+            class="mobile-menu-button"
+            id="mobileMenuButton"
+            aria-label="Open menu"
+        >
+            <span></span>
+            <span></span>
+        </button>
+
+        <a href="#" class="brand">
+            jewelry
+        </a>
+
+    </div>
+
+
+    <nav class="main-nav">
+
+        <a href="#shop">Shop</a>
+        <a href="#collection">Collection</a>
+        <a href="#story">Our Story</a>
+        <a href="#contact">Contact</a>
+
+    </nav>
+
+
+    <div class="header-actions">
+
+        <button
+            class="header-icon"
+            id="searchButton"
+            aria-label="Search"
+        >
+            <svg viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line
+                    x1="16.5"
+                    y1="16.5"
+                    x2="21"
+                    y2="21"
+                ></line>
+            </svg>
+        </button>
+
+
+        <button
+            class="header-icon cart-button"
+            id="cartButton"
+            aria-label="Shopping bag"
+        >
+            <svg viewBox="0 0 24 24">
+                <path d="M6 8h12l1 13H5L6 8Z"></path>
+                <path d="M9 8a3 3 0 0 1 6 0"></path>
+            </svg>
+
+            <span id="cartCount">0</span>
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- Mobile Menu -->
+<div
+    class="mobile-menu"
+    id="mobileMenu"
+>
+
+    <a href="#shop">Shop</a>
+    <a href="#collection">Collection</a>
+    <a href="#story">Our Story</a>
+    <a href="#contact">Contact</a>
+
+</div>
+
+
+<!-- Search -->
+<div
+    class="search-panel"
+    id="searchPanel"
+>
+
+    <div class="search-inner">
+
+        <input
+            type="search"
+            id="searchInput"
+            placeholder="Search jewelry..."
+            autocomplete="off"
+        >
+
+        <button
+            id="closeSearch"
+            aria-label="Close search"
+        >
+            ×
+        </button>
+
+    </div>
+
+</div>
+
+
+<main>
+
+    <!-- Hero -->
+    <section class="hero">
+
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+
+            <p class="eyebrow">
+                THE NEW COLLECTION
+            </p>
+
+            <h1>
+                Jewelry that<br>
+                <em>remembers you.</em>
+            </h1>
+
+            <p class="hero-text">
+                Timeless pieces designed to become part
+                of your story — today and for years to come.
+            </p>
+
+            <a
+                href="#shop"
+                class="hero-button"
+            >
+                Discover the collection
+                <span>→</span>
+            </a>
+
+        </div>
+
+        <div class="hero-caption">
+            jewelry · EST. 2026
+        </div>
+
+    </section>
+
+
+    <!-- Intro -->
+    <section class="intro">
+
+        <p class="eyebrow">
+            A QUIET KIND OF LUXURY
+        </p>
+
+        <h2>
+            Made to be worn.<br>
+            <em>Made to be remembered.</em>
+        </h2>
+
+        <p>
+            We believe the most beautiful jewelry
+            doesn't ask for attention. It simply belongs
+            to you.
+        </p>
+
+    </section>
+
+
+    <!-- Collection -->
+    <section
+        class="collection-section"
+        id="collection"
+    >
+
+        <div class="section-header">
+
+            <div>
+
+                <p class="eyebrow">
+                    THE COLLECTION
+                </p>
+
+                <h2>
+                    Pieces with presence.
+                </h2>
+
+            </div>
+
+
+            <div
+                class="collection-filters"
+                id="collectionFilters"
+            >
+
+                <button
+                    class="collection-filter active"
+                    data-filter="All"
+                >
+                    All
+                </button>
+
+                <button
+                    class="collection-filter"
+                    data-filter="Rings"
+                >
+                    Rings
+                </button>
+
+                <button
+                    class="collection-filter"
+                    data-filter="Necklaces"
+                >
+                    Necklaces
+                </button>
+
+                <button
+                    class="collection-filter"
+                    data-filter="Earrings"
+                >
+                    Earrings
+                </button>
+
+                <button
+                    class="collection-filter"
+                    data-filter="Bracelets"
+                >
+                    Bracelets
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="products-grid"
+            id="productsGrid"
+        ></div>
+
+
+        <div
+            class="empty-products"
+            id="emptyProducts"
+        >
+
+            <h3>
+                Nothing found
+            </h3>
+
+            <p>
+                Try another search or category.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Editorial -->
+    <section class="editorial">
+
+        <div class="editorial-image"></div>
+
+        <div class="editorial-content">
+
+            
+
+            <h2>
+                Beauty doesn't<br>
+                need to be loud.
+            </h2>
+
+            <p>
+                Every AURELIA piece begins with simplicity.
+                Clean lines, delicate proportions and details
+                designed to remain beautiful beyond a season.
+            </p>
+
+            <a
+                href="#story"
+                class="editorial-link"
+            >
+                Discover our story
+                <span>→</span>
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- Story -->
+    <section
+        class="story"
+        id="story"
+    >
+
+        <div class="story-content">
+
+            <p class="eyebrow">
+                OUR STORY
+            </p>
+
+            <h2>
+                Jewelry should<br>
+                feel like <em>you.</em>
+            </h2>
+
+            <p>
+                AURELIA was born from a fascination with
+                objects that quietly become part of our lives.
+                A ring worn every morning. A necklace given
+                on an unforgettable night. Earrings that become
+                part of your signature.
+            </p>
+
+            <p>
+                We create pieces for those moments.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Instagram -->
+    <section
+        class="instagram-section"
+        id="contact"
+    >
+
+        <div class="section-header instagram-header">
+
+            <div>
+
+                <p class="eyebrow">
+                    FOLLOW ALONG
+                </p>
+
+                <h2>
+                    @jewelry
+                </h2>
+
+            </div>
+
+            <a href="#">
+                Follow us →
+            </a>
+
+        </div>
+
+
+        <div class="instagram-grid">
+
+            <div class="instagram-item instagram-one"></div>
+
+            <div class="instagram-item instagram-two"></div>
+
+            <div class="instagram-item instagram-three"></div>
+
+            <div class="instagram-item instagram-four"></div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- Product Modal -->
+<div
+    class="modal-overlay"
+    id="productModal"
+>
+
+    <div class="product-modal">
+
+        <button
+            class="modal-close"
+            id="closeProductModal"
+            aria-label="Close"
+        >
+            ×
+        </button>
+
+
+        <div
+            class="modal-image"
+            id="modalImage"
+        ></div>
+
+
+        <div class="modal-details">
+
+            <p
+                class="eyebrow"
+                id="modalCategory"
+            ></p>
+
+            <h2 id="modalName"></h2>
+
+            <div
+                class="modal-price"
+                id="modalPrice"
+            ></div>
+
+            <div
+                class="modal-description"
+                id="modalDescription"
+            ></div>
+
+
+            <div
+                class="size-section"
+                id="sizeSection"
+            >
+
+                <div class="size-label">
+                    Ring size
+                </div>
+
+                <div class="size-options">
+
+                    <button class="size-option">
+                        5
+                    </button>
+
+                    <button class="size-option">
+                        6
+                    </button>
+
+                    <button class="size-option selected">
+                        7
+                    </button>
+
+                    <button class="size-option">
+                        8
+                    </button>
+
+                    <button class="size-option">
+                        9
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-quantity">
+
+                <button id="modalMinus">
+                    −
+                </button>
+
+                <span id="modalQuantity">
+                    1
+                </span>
+
+                <button id="modalPlus">
+                    +
+                </button>
+
+            </div>
+
+
+            <button
+                class="add-to-bag"
+                id="modalAddToCart"
+            >
+                Add to bag
+                <span>→</span>
+            </button>
+
+
+            <div class="product-note">
+
+                <span>✦</span>
+
+                Complimentary gift packaging included.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Cart Overlay -->
+<div
+    class="cart-overlay"
+    id="cartOverlay"
+></div>
+
+
+<!-- Cart -->
+<aside
+    class="cart-drawer"
+    id="cartDrawer"
+>
+
+    <div class="cart-header">
+
+        <div>
+
+            <p class="eyebrow">
+                YOUR SELECTION
+            </p>
+
+            <h2>
+                Your bag
+            </h2>
+
+        </div>
+
+
+        <button
+            id="closeCart"
+            aria-label="Close cart"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div
+        class="cart-items"
+        id="cartItems"
+    ></div>
+
+
+    <div
+        class="cart-empty"
+        id="cartEmpty"
+    >
+
+        <div class="empty-bag">
+            ♢
+        </div>
+
+        <h3>
+            Your bag is empty.
+        </h3>
+
+        <p>
+            Discover something beautiful.
+        </p>
+
+        <button
+            class="continue-shopping"
+            id="continueShopping"
+        >
+            Continue shopping
+        </button>
+
+    </div>
+
+
+    <div
+        class="cart-footer"
+        id="cartFooter"
+    >
+
+        <div class="cart-subtotal">
+
+            <span>
+                Subtotal
+            </span>
+
+            <strong id="cartSubtotal">
+                $0.00
+            </strong>
+
+        </div>
+
+
+        <p class="cart-shipping">
+            Complimentary shipping on orders over $150.
+        </p>
+
+
+        <button
+            class="checkout-button"
+            id="checkoutButton"
+        >
+            Checkout
+            <span>→</span>
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- Checkout -->
+<div
+    class="modal-overlay"
+    id="checkoutModal"
+>
+
+    <div class="checkout-modal">
+
+        <button
+            class="modal-close"
+            id="closeCheckout"
+        >
+            ×
+        </button>
+
+
+        <div class="checkout-heading">
+
+            <p class="eyebrow">
+                CHECKOUT
+            </p>
+
+            <h2>
+                Complete your order.
+            </h2>
+
+            <p>
+                No account required.
+            </p>
+
+        </div>
+
+
+        <form id="checkoutForm">
+
+            <div class="form-row">
+
+                <div class="form-field">
+
+                    <label for="firstName">
+                        First name
+                    </label>
+
+                    <input
+                        id="firstName"
+                        name="firstName"
+                        type="text"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="lastName">
+                        Last name
+                    </label>
+
+                    <input
+                        id="lastName"
+                        name="lastName"
+                        type="text"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="phone">
+                    Phone number
+                </label>
+
+                <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="address">
+                    Delivery address
+                </label>
+
+                <input
+                    id="address"
+                    name="address"
+                    type="text"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-field">
+
+                    <label for="city">
+                        City
+                    </label>
+
+                    <input
+                        id="city"
+                        name="city"
+                        type="text"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="postalCode">
+                        Postal code
+                    </label>
+
+                    <input
+                        id="postalCode"
+                        name="postalCode"
+                        type="text"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="checkout-total">
+
+                <span>
+                    Total
+                </span>
+
+                <strong id="checkoutTotal">
+                    $0.00
+                </strong>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="place-order"
+            >
+                Place order
+                <span>→</span>
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- Success -->
+<div
+    class="modal-overlay"
+    id="successModal"
+>
+
+    <div class="success-modal">
+
+        <div class="success-symbol">
+            ✓
+        </div>
+
+        <p class="eyebrow">
+            ORDER RECEIVED
+        </p>
+
+        <h2>
+            Thank you.
+        </h2>
+
+        <p>
+            Your order has been received.
+            We will contact you shortly to confirm
+            the details.
+        </p>
+
+        <button
+            class="continue-shopping"
+            id="closeSuccess"
+        >
+            Continue shopping
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- Footer -->
+<footer
+    class="footer"
+    id="footer"
+>
+
+    <div class="footer-main">
+
+        <div class="footer-brand">
+
+            <div class="footer-logo">
+                AURELIA
+            </div>
+
+            <p>
+                Jewelry for the moments<br>
+                worth remembering.
+            </p>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>
+                SHOP
+            </h4>
+
+            <a href="#shop">All jewelry</a>
+            <a href="#shop">Rings</a>
+            <a href="#shop">Necklaces</a>
+            <a href="#shop">Earrings</a>
+            <a href="#shop">Bracelets</a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>
+                INFORMATION
+            </h4>
+
+            <a href="#story">Our story</a>
+            <a href="#">Shipping</a>
+            <a href="#">Returns</a>
+            <a href="#">Care guide</a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>
+                FOLLOW
+            </h4>
+
+            <a href="#">
+                Instagram
+            </a>
+
+            <a href="#">
+                TikTok
+            </a>
+
+            <a href="#">
+                Pinterest
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <span>
+            © 2026 jewelry
+        </span>
+
+        <span>
+            Fine jewelry, thoughtfully made.
+        </span>
+
+    </div>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+
+</body>
+</html>
