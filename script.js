@@ -74,10 +74,11 @@ async function init() {
 // 📌 პროდუქტების წამოღება Supabase ბაზიდან
 async function fetchProductsFromSupabase() {
     try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*`, {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*&order=id.desc`, {
             headers: {
                 "apikey": SUPABASE_ANON_KEY,
-                "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+                "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+                "Cache-Control": "no-cache"
             }
         });
         if (response.ok) {
@@ -246,7 +247,7 @@ function openProductModal(productId) {
     DOM.modalCategory.textContent = product.category;
     DOM.modalName.textContent = product.name;
     DOM.modalPrice.textContent = formatPrice(product.price);
-    DOM.modalDescription.textContent = product.description;
+    DOM.modalDescription.textContent = product.description || '';
 
     if (product.category === "Rings") {
         DOM.sizeSection?.classList.remove("hidden");
@@ -488,7 +489,10 @@ async function submitOrder(event) {
     if (state.cart.length === 0) return;
 
     const submitBtn = DOM.checkoutForm.querySelector("button[type='submit']");
-    if (submitBtn) submitBtn.disabled = true;
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "გადამისამართება BOG-ზე...";
+    }
 
     const formData = new FormData(DOM.checkoutForm);
 
@@ -512,6 +516,9 @@ async function submitOrder(event) {
     };
 
     try {
+        // 1.5 წამიანი სატესტო დაყოვნება (Bank of Georgia-ს იმიტაცია)
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
         const response = await fetch('/api/pay', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -529,13 +536,16 @@ async function submitOrder(event) {
             closeCart();
             openSuccess();
         } else {
-            alert("შეცდომა: " + (data.error || "შეკვეთა ვერ გაიგზავნა"));
+            alert("გადახდის შეცდომა: " + (data.error || "შეკვეთა ვერ დამუშავდა"));
         }
     } catch (err) {
         console.error("API Error:", err);
         alert("სერვერთან კავშირი ვერ დამყარდა.");
     } finally {
-        if (submitBtn) submitBtn.disabled = false;
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Place order";
+        }
     }
 }
 
