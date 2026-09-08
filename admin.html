@@ -213,13 +213,19 @@
     }
 
     async function updateOrderStatus(orderId, newStatus) {
-      const { error } = await supabaseClient
-        .from('orders')
-        .update({ status: newStatus })
-        .eq('id', orderId);
+  const { error } = await supabaseClient
+    .from('orders')
+    .update({ status: newStatus })
+    .eq('id', orderId);
 
-      if (!error) fetchOrders();
-    }
+  if (error) {
+    console.error("Status Update Error:", error);
+    alert("სტატუსის განახლება ვერ მოხერხდა!");
+  } else {
+    // წარმატების შემთხვევაში ხელახლა წამოიღებს მონაცემებს და გადაანაწილებს თაბებში
+    await fetchOrders();
+  }
+}
 
     async function fetchProducts() {
       const { data: products, error } = await supabaseClient
