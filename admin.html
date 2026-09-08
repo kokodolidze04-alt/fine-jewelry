@@ -169,35 +169,47 @@
       const activeList = orders ? orders.filter(o => o.status !== 'completed') : [];
       const historyList = orders ? orders.filter(o => o.status === 'completed') : [];
 
-      activeTbody.innerHTML = activeList.map(o => `
-        <tr>
-          <td><strong>#${o.id}</strong></td>
-          <td>${new Date(o.created_at).toLocaleString('ka-GE')}</td>
-          <td>${o.customer_name || ''}</td>
-          <td>${o.phone || ''}</td>
-          <td>${o.address || ''}</td>
-          <td>${Array.isArray(o.items) ? o.items.map(i => `${i.name} x${i.quantity}`).join('<br>') : ''}</td>
-          <td><strong>${o.total_amount || 0} ₾</strong></td>
-          <td><span style="color:#d97706; font-weight:bold;">${o.status}</span></td>
-          <td>
-            <button class="btn btn-shipped" onclick="updateOrderStatus(${o.id}, 'shipped')">გაგზავნილია</button>
-            <button class="btn btn-completed" onclick="updateOrderStatus(${o.id}, 'completed')">დასრულებულია</button>
-          </td>
-        </tr>
-      `).join('') || '<tr><td colspan="9">აქტიური შეკვეთები არ არის</td></tr>';
+      activeTbody.innerHTML = activeList.map(o => {
+        const itemsList = Array.isArray(o.items) 
+          ? o.items.map(i => `${i.name || 'პროდუქტი'} x${i.quantity || 1}`).join('<br>') 
+          : '—';
 
-      historyTbody.innerHTML = historyList.map(o => `
-        <tr>
-          <td><strong>#${o.id}</strong></td>
-          <td>${new Date(o.created_at).toLocaleString('ka-GE')}</td>
-          <td>${o.customer_name || ''}</td>
-          <td>${o.phone || ''}</td>
-          <td>${o.address || ''}</td>
-          <td>${Array.isArray(o.items) ? o.items.map(i => `${i.name} x${i.quantity}`).join('<br>') : ''}</td>
-          <td><strong>${o.total_amount || 0} ₾</strong></td>
-          <td><span style="color:#10b981; font-weight:bold;">completed</span></td>
-        </tr>
-      `).join('') || '<tr><td colspan="8">ისტორია ცარიელია</td></tr>';
+        return `
+          <tr>
+            <td><strong>#${o.id}</strong></td>
+            <td>${new Date(o.created_at).toLocaleString('ka-GE')}</td>
+            <td>${o.customer_name || o.customer || '—'}</td>
+            <td>${o.phone || '—'}</td>
+            <td>${o.address || '—'}</td>
+            <td>${itemsList}</td>
+            <td><strong>${o.total_amount || 0} ₾</strong></td>
+            <td><span style="color:#d97706; font-weight:bold;">${o.status}</span></td>
+            <td>
+              <button class="btn btn-shipped" onclick="updateOrderStatus(${o.id}, 'shipped')">გაგზავნილია</button>
+              <button class="btn btn-completed" onclick="updateOrderStatus(${o.id}, 'completed')">დასრულებულია</button>
+            </td>
+          </tr>
+        `;
+      }).join('') || '<tr><td colspan="9">აქტიური შეკვეთები არ არის</td></tr>';
+
+      historyTbody.innerHTML = historyList.map(o => {
+        const itemsList = Array.isArray(o.items) 
+          ? o.items.map(i => `${i.name || 'პროდუქტი'} x${i.quantity || 1}`).join('<br>') 
+          : '—';
+
+        return `
+          <tr>
+            <td><strong>#${o.id}</strong></td>
+            <td>${new Date(o.created_at).toLocaleString('ka-GE')}</td>
+            <td>${o.customer_name || o.customer || '—'}</td>
+            <td>${o.phone || '—'}</td>
+            <td>${o.address || '—'}</td>
+            <td>${itemsList}</td>
+            <td><strong>${o.total_amount || 0} ₾</strong></td>
+            <td><span style="color:#10b981; font-weight:bold;">completed</span></td>
+          </tr>
+        `;
+      }).join('') || '<tr><td colspan="8">ისტორია ცარიელია</td></tr>';
     }
 
     async function updateOrderStatus(orderId, newStatus) {
