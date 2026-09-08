@@ -4,7 +4,6 @@ export default async function handler(req, res) {
   }
 
   const SUPABASE_URL = "https://yxcexveaqdwmqpmtqsxn.supabase.co";
-  // Vercel-ის Environment Variable-იდან წამოიღებს ან პირდაპირ სტრინგიდან
   const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4Y2V4dmVhcWR3bXFwbXRxc3huIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4ODQ1NTQ0OCwiZXhwIjoyMTA0MDMxNDQ4fQ.hqEL8xOgDzEGiODlASzaeOEKlo5lNwlNI3bnJTrU9n0";
 
   try {
@@ -21,7 +20,6 @@ export default async function handler(req, res) {
       }
     ];
 
-    // პირდაპირი REST მოთხოვნა Supabase-ის ბაზაში
     const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
       method: 'POST',
       headers: {
