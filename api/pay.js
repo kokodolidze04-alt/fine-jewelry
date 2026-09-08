@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = "https://yxcexveaqdwmqpmtqsxn.supabase.co";
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4Y2V4dmVhcWR3bXFwbXRxc3huIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4ODQ1NTQ0OCwiZXhwIjoyMTA0MDMxNDQ4fQ.placeholder";
+const SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4Y2V4dmVhcWR3bXFwbXRxc3huIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4ODQ1NTQ0OCwiZXhwIjoyMTA0MDMxNDQ4fQ.hqEL8xOgDzEGiODlASzaeOEKlo5lNwlNI3bnJTrU9n0";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
@@ -13,7 +13,6 @@ export default async function handler(req, res) {
   try {
     const { customer, items, total } = req.body;
 
-    // 1. შეკვეთის ჩაწერა Supabase-ში
     const { data: order, error } = await supabase
       .from('orders')
       .insert([
@@ -23,7 +22,7 @@ export default async function handler(req, res) {
           address: `${customer.address}, ${customer.city}`,
           items: items,
           total_amount: total,
-          status: 'BOG_TEST_PAID' // საქართველოს ბანკის სატესტო სტატუსი
+          status: 'BOG_TEST_PAID'
         }
       ])
       .select()
@@ -31,7 +30,6 @@ export default async function handler(req, res) {
 
     if (error) throw error;
 
-    // 2. სატესტო პასუხი (BOG API Sim)
     return res.status(200).json({ 
       success: true, 
       message: 'Bank of Georgia Test Payment Successful!',
