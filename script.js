@@ -4,7 +4,18 @@
 const SUPABASE_URL = "https://yxcexveaqdwmqpmtqsxn.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4Y2V4dmVhcWR3bXFwbXRxc3huIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0NTU0NDgsImV4cCI6MjEwNDAzMTQ0OH0.3BOHDlfYwI6Bya7kERUB4wustxo0hzR-y7Vlu7x36b4";
 
-let PRODUCTS = []; // ბაზიდან წამოღებული პროდუქტები აქ ჩაიწერება
+const DEMO_PRODUCTS = [
+    { id: "demo-ring-01", name: "Solstice Gold Ring", category: "Rings", price: 189, image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=85", badge: "Bestseller", description: "A sculptural gold-tone ring designed for everyday wear. Demo product; materials and specifications are illustrative." },
+    { id: "demo-ring-02", name: "Luna Signet Ring", category: "Rings", price: 215, image: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=900&q=85", badge: "", description: "A clean, modern signet silhouette with a softly polished finish. Demo product." },
+    { id: "demo-necklace-01", name: "Celeste Pendant", category: "Necklaces", price: 249, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=85", badge: "New", description: "A delicate pendant necklace with a minimal, timeless profile. Demo product." },
+    { id: "demo-necklace-02", name: "Golden Hour Chain", category: "Necklaces", price: 175, image: "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=900&q=85", badge: "", description: "A versatile chain intended to layer or wear on its own. Demo product." },
+    { id: "demo-earrings-01", name: "Aura Hoops", category: "Earrings", price: 159, image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=85", badge: "Bestseller", description: "Light-catching hoops with a refined everyday shape. Demo product." },
+    { id: "demo-earrings-02", name: "Pearl Drop Earrings", category: "Earrings", price: 229, image: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=900&q=85", badge: "", description: "A graceful drop silhouette inspired by classic occasion jewelry. Demo product." },
+    { id: "demo-bracelet-01", name: "Serene Bracelet", category: "Bracelets", price: 199, image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=900&q=85", badge: "", description: "A subtle bracelet designed to complement a daily jewelry stack. Demo product." },
+    { id: "demo-bracelet-02", name: "Lumi Cuff", category: "Bracelets", price: 269, image: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=900&q=85", badge: "Limited", description: "A minimal cuff with a bold but understated shape. Demo product." }
+];
+
+let PRODUCTS = []; // Live products from Supabase, or demo products if the API is unavailable.
 
 const state = {
     cart: loadCart(),
@@ -12,7 +23,8 @@ const state = {
     search: "",
     currentProductId: null,
     quantity: 1,
-    selectedSize: "7"
+    selectedSize: "7",
+    lastDemoOrderReference: null
 };
 
 const DOM = {
@@ -81,15 +93,41 @@ async function fetchProductsFromSupabase() {
                 "Cache-Control": "no-cache"
             }
         });
-        if (response.ok) {
-            PRODUCTS = await response.json();
-            renderProducts();
-        } else {
-            console.error("პროდუქტების ჩატვირთვა ვერ მოხერხდა");
+
+        if (!response.ok) {
+            throw new Error(`Supabase returned ${response.status}`);
         }
+
+        const rows = await response.json();
+        PRODUCTS = Array.isArray(rows) && rows.length
+            ? rows.map(normalizeProduct)
+            : DEMO_PRODUCTS;
     } catch (err) {
-        console.error("Supabase Error:", err);
+        console.warn("Using local demo products because the product API is unavailable:", err);
+        PRODUCTS = DEMO_PRODUCTS;
     }
+
+    renderProducts();
+}
+
+function normalizeProduct(product) {
+    return {
+        ...product,
+        id: product.id,
+        name: String(product.name || "Untitled product"),
+        category: normalizeCategory(product.category),
+        price: Number(product.price) || 0,
+        image: String(product.image || ""),
+        description: String(product.description || ""),
+        badge: String(product.badge || "")
+    };
+}
+
+function normalizeCategory(value) {
+    const raw = String(value || "Jewelry").trim();
+    const known = ["Rings", "Necklaces", "Earrings", "Bracelets"];
+    const match = known.find(category => category.toLowerCase() === raw.toLowerCase());
+    return match || (raw ? raw.charAt(0).toUpperCase() + raw.slice(1) : "Jewelry");
 }
 
 function setupEvents() {
@@ -128,7 +166,10 @@ function setupEvents() {
         });
     });
 
-    DOM.searchButton?.addEventListener("click", openSearch);
+    DOM.searchButton?.addEventListener("click", () => {
+        if (DOM.searchPanel?.classList.contains("open")) closeSearch();
+        else openSearch();
+    });
     DOM.closeSearch?.addEventListener("click", closeSearch);
 
     DOM.searchInput?.addEventListener("input", event => {
@@ -136,13 +177,23 @@ function setupEvents() {
         renderProducts();
     });
 
+    document.addEventListener("click", event => {
+        const clickedInsideSearch = DOM.searchPanel?.contains(event.target) ||
+            DOM.searchButton?.contains(event.target);
+        if (!clickedInsideSearch && DOM.searchPanel?.classList.contains("open")) {
+            closeSearch();
+        }
+    });
+
     DOM.mobileMenuButton?.addEventListener("click", () => {
-        DOM.mobileMenu?.classList.toggle("open");
+        const isOpen = DOM.mobileMenu?.classList.toggle("open") || false;
+        DOM.mobileMenuButton?.setAttribute("aria-expanded", String(isOpen));
     });
 
     DOM.mobileMenu?.querySelectorAll("a").forEach(link => {
         link.addEventListener("click", () => {
             DOM.mobileMenu?.classList.remove("open");
+            DOM.mobileMenuButton?.setAttribute("aria-expanded", "false");
         });
     });
 
@@ -160,7 +211,8 @@ function setupEvents() {
 
 function getFilteredProducts() {
     return PRODUCTS.filter(product => {
-        const categoryMatch = state.filter === "All" || product.category === state.filter;
+        const categoryMatch = state.filter === "All" ||
+            String(product.category).toLowerCase() === String(state.filter).toLowerCase();
         if (!categoryMatch) return false;
         if (!state.search) return true;
 
@@ -188,6 +240,18 @@ function renderProducts() {
 function createProductCard(product) {
     const card = document.createElement("article");
     card.className = "product-card";
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `View ${product.name}`);
+
+    const openProduct = () => openProductModal(product.id);
+    card.addEventListener("click", openProduct);
+    card.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openProduct();
+        }
+    });
 
     const image = document.createElement("div");
     image.className = "product-image";
@@ -196,6 +260,10 @@ function createProductCard(product) {
     img.src = product.image;
     img.alt = product.name;
     img.loading = "lazy";
+    img.onerror = () => {
+        img.onerror = null;
+        img.src = "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=900&q=80";
+    };
 
     image.appendChild(img);
 
@@ -228,15 +296,11 @@ function createProductCard(product) {
     card.appendChild(image);
     card.appendChild(info);
 
-    card.addEventListener("click", () => {
-        openProductModal(product.id);
-    });
-
     return card;
 }
 
 function openProductModal(productId) {
-    const product = PRODUCTS.find(item => Number(item.id) === Number(productId));
+    const product = PRODUCTS.find(item => String(item.id) === String(productId));
     if (!product) return;
 
     state.currentProductId = product.id;
@@ -244,6 +308,8 @@ function openProductModal(productId) {
     state.selectedSize = "7";
 
     DOM.modalImage.style.backgroundImage = `url("${product.image}")`;
+    DOM.modalImage.setAttribute("role", "img");
+    DOM.modalImage.setAttribute("aria-label", product.name);
     DOM.modalCategory.textContent = product.category;
     DOM.modalName.textContent = product.name;
     DOM.modalPrice.textContent = formatPrice(product.price);
@@ -269,7 +335,7 @@ function closeProductModal() {
 }
 
 function getCurrentProduct() {
-    return PRODUCTS.find(product => Number(product.id) === Number(state.currentProductId)) || null;
+    return PRODUCTS.find(product => String(product.id) === String(state.currentProductId)) || null;
 }
 
 function increaseQuantity() {
@@ -301,7 +367,7 @@ function addCurrentProduct() {
 
     const size = product.category === "Rings" ? state.selectedSize : "Standard";
 
-    const existing = state.cart.find(item => Number(item.productId) === Number(product.id) && item.size === size);
+    const existing = state.cart.find(item => String(item.productId) === String(product.id) && item.size === size);
 
     if (existing) {
         existing.quantity += state.quantity;
@@ -411,10 +477,10 @@ function handleCartAction(event) {
     if (!button) return;
 
     const action = button.dataset.action;
-    const productId = Number(button.dataset.productId);
+    const productId = String(button.dataset.productId);
     const size = button.dataset.size;
 
-    const index = state.cart.findIndex(item => Number(item.productId) === productId && item.size === size);
+    const index = state.cart.findIndex(item => String(item.productId) === productId && item.size === size);
     if (index === -1) return;
 
     if (action === "increase") state.cart[index].quantity++;
@@ -465,11 +531,13 @@ function updateFilters() {
 
 function openSearch() {
     DOM.searchPanel?.classList.add("open");
+    DOM.searchButton?.setAttribute("aria-expanded", "true");
     setTimeout(() => DOM.searchInput?.focus(), 100);
 }
 
 function closeSearch() {
     DOM.searchPanel?.classList.remove("open");
+    DOM.searchButton?.setAttribute("aria-expanded", "false");
 }
 
 function openCheckout() {
@@ -486,70 +554,67 @@ function closeCheckout() {
 
 async function submitOrder(event) {
     event.preventDefault();
-    if (state.cart.length === 0) return;
+    if (!DOM.checkoutForm || state.cart.length === 0) return;
+
+    if (!DOM.checkoutForm.reportValidity()) return;
 
     const submitBtn = DOM.checkoutForm.querySelector("button[type='submit']");
+    const originalButtonText = submitBtn?.innerHTML;
+
     if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = "გადამისამართება BOG-ზე...";
+        submitBtn.textContent = "Preparing demo order…";
     }
 
-    const formData = new FormData(DOM.checkoutForm);
-
-    const orderPayload = {
-        customer: {
-            firstName: String(formData.get("firstName") || "").trim(),
-            lastName: String(formData.get("lastName") || "").trim(),
-            phone: String(formData.get("phone") || "").trim(),
-            address: String(formData.get("address") || "").trim(),
-            city: String(formData.get("city") || "").trim(),
-            postalCode: String(formData.get("postalCode") || "").trim()
-        },
-        items: state.cart.map(item => ({
-            productId: item.productId,
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity,
-            size: item.size
-        })),
-        total: getCartSubtotal()
-    };
-
+    // This storefront is a portfolio demo: it deliberately does not charge a card
+    // or send personal details to a payment endpoint.
     try {
-        // 1.5 წამიანი სატესტო დაყოვნება (Bank of Georgia-ს იმიტაცია)
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        const formData = new FormData(DOM.checkoutForm);
+        const demoOrder = {
+            reference: `AUR-${Date.now().toString().slice(-8)}`,
+            customer: {
+                firstName: String(formData.get("firstName") || "").trim(),
+                lastName: String(formData.get("lastName") || "").trim(),
+                phone: String(formData.get("phone") || "").trim(),
+                address: String(formData.get("address") || "").trim(),
+                city: String(formData.get("city") || "").trim(),
+                postalCode: String(formData.get("postalCode") || "").trim()
+            },
+            items: state.cart.map(item => ({
+                productId: item.productId,
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity,
+                size: item.size
+            })),
+            total: getCartSubtotal(),
+            demoOnly: true
+        };
 
-        const response = await fetch('/api/pay', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderPayload)
-        });
+        console.info("AURELIA demo checkout (not a real order):", demoOrder);
 
-        const data = await response.json();
-
-        if (data.success) {
-            state.cart = [];
-            saveCart();
-            renderCart();
-            DOM.checkoutForm.reset();
-            closeCheckout();
-            closeCart();
-            openSuccess();
-        } else {
-            alert("გადახდის შეცდომა: " + (data.error || "შეკვეთა ვერ დამუშავდა"));
-        }
+        state.lastDemoOrderReference = demoOrder.reference;
+        state.cart = [];
+        saveCart();
+        renderCart();
+        DOM.checkoutForm.reset();
+        closeCheckout();
+        closeCart();
+        openSuccess();
     } catch (err) {
-        console.error("API Error:", err);
-        alert("სერვერთან კავშირი ვერ დამყარდა.");
+        console.error("Demo checkout error:", err);
+        alert("The demo checkout could not be completed. Please try again.");
     } finally {
         if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = "Place order";
+            submitBtn.innerHTML = originalButtonText || 'Place order <span>→</span>';
         }
     }
 }
 
 function openSuccess() {
+    const reference = DOM.successModal?.querySelector("[data-order-reference]");
+    if (reference) reference.textContent = state.lastDemoOrderReference || "DEMO";
     DOM.successModal?.classList.add("open");
     lockBody();
 }
@@ -567,6 +632,7 @@ function handleKeyboard(event) {
     if (DOM.cartDrawer?.classList.contains("open")) return closeCart();
     if (DOM.searchPanel?.classList.contains("open")) return closeSearch();
     DOM.mobileMenu?.classList.remove("open");
+    DOM.mobileMenuButton?.setAttribute("aria-expanded", "false");
 }
 
 function lockBody() {

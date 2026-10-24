@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-<title>Fine Jewelry</title>
+<title>AURELIA — Fine Jewelry</title>
 
 <meta
     name="description"
@@ -26,12 +26,12 @@
 
 </head>
 
-<body>
+<body id="top">
 
 
 <!-- Announcement -->
 <div class="announcement">
-    Complimentary shipping on orders over $150
+    Complimentary shipping on orders over ₾150
 </div>
 
 
@@ -44,21 +44,23 @@
             class="mobile-menu-button"
             id="mobileMenuButton"
             aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="mobileMenu"
         >
             <span></span>
             <span></span>
         </button>
 
-        <a href="#" class="brand">
+        <a href="#top" class="brand">
             jewelry
         </a>
 
     </div>
 
 
-    <nav class="main-nav">
+    <nav class="main-nav" aria-label="Main navigation">
 
-        <a href="#shop">Shop</a>
+        <a href="#collection">Shop</a>
         <a href="#collection">Collection</a>
         <a href="#story">Our Story</a>
         <a href="#contact">Contact</a>
@@ -72,6 +74,8 @@
             class="header-icon"
             id="searchButton"
             aria-label="Search"
+            aria-expanded="false"
+            aria-controls="searchPanel"
         >
             <svg viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="7"></circle>
@@ -109,7 +113,7 @@
     id="mobileMenu"
 >
 
-    <a href="#shop">Shop</a>
+    <a href="#collection">Shop</a>
     <a href="#collection">Collection</a>
     <a href="#story">Our Story</a>
     <a href="#contact">Contact</a>
@@ -147,7 +151,7 @@
 <main>
 
     <!-- Hero -->
-    <section class="hero">
+    <section class="hero" id="shop">
 
         <div class="hero-overlay"></div>
 
@@ -168,7 +172,7 @@
             </p>
 
             <a
-                href="#shop"
+                href="#collection"
                 class="hero-button"
             >
                 Discover the collection
@@ -382,9 +386,7 @@
 
             </div>
 
-            <a href="#">
-                Follow us →
-            </a>
+            <a href="#footer" aria-label="Find our contact links">Contact us →</a>
 
         </div>
 
@@ -616,7 +618,7 @@
 
 
         <p class="cart-shipping">
-            Complimentary shipping on orders over $150.
+            Complimentary shipping on orders over ₾150.
         </p>
 
 
@@ -820,10 +822,9 @@
         </h2>
 
         <p>
-            Your order has been received.
-            We will contact you shortly to confirm
-            the details.
+            This is a demo checkout. No payment was taken and no real order was placed.
         </p>
+        <p class="demo-order-reference">Demo reference: <strong data-order-reference>DEMO</strong></p>
 
         <button
             class="continue-shopping"
@@ -836,6 +837,19 @@
 
 </div>
 
+
+<!-- Store information: demo policies -->
+<section class="store-info" id="shipping-info" aria-labelledby="storeInfoTitle">
+    <div class="store-info-inner">
+        <p class="eyebrow">HELP &amp; CARE</p>
+        <h2 id="storeInfoTitle">Thoughtful details, from delivery to care.</h2>
+        <div class="store-info-grid">
+            <article><h3>Shipping</h3><p>Delivery options and timing would be confirmed with you before a real order is processed. This portfolio demo does not dispatch products.</p></article>
+            <article><h3>Returns</h3><p>For a real store, return eligibility and time limits should be stated here before checkout. No real purchase is made in this demo.</p></article>
+            <article><h3>Jewelry care</h3><p>Store pieces separately, avoid chemicals and perfumes, and clean gently with a soft cloth. Follow material-specific care guidance.</p></article>
+        </div>
+    </div>
+</section>
 
 <!-- Footer -->
 <footer
@@ -865,11 +879,11 @@
                 SHOP
             </h4>
 
-            <a href="#shop">All jewelry</a>
-            <a href="#shop">Rings</a>
-            <a href="#shop">Necklaces</a>
-            <a href="#shop">Earrings</a>
-            <a href="#shop">Bracelets</a>
+            <a href="#collection">All jewelry</a>
+            <a href="#collection">Rings</a>
+            <a href="#collection">Necklaces</a>
+            <a href="#collection">Earrings</a>
+            <a href="#collection">Bracelets</a>
 
         </div>
 
@@ -881,9 +895,9 @@
             </h4>
 
             <a href="#story">Our story</a>
-            <a href="#">Shipping</a>
-            <a href="#">Returns</a>
-            <a href="#">Care guide</a>
+            <a href="#shipping-info">Shipping</a>
+            <a href="#shipping-info">Returns</a>
+            <a href="#shipping-info">Care guide</a>
 
         </div>
 
@@ -894,17 +908,11 @@
                 FOLLOW
             </h4>
 
-            <a href="#">
-                Instagram
-            </a>
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
 
-            <a href="#">
-                TikTok
-            </a>
+            <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok ↗</a>
 
-            <a href="#">
-                Pinterest
-            </a>
+            <a href="https://www.pinterest.com/" target="_blank" rel="noopener noreferrer">Pinterest ↗</a>
 
         </div>
 
@@ -914,7 +922,7 @@
     <div class="footer-bottom">
 
         <span>
-            © 2026 jewelry
+            © 2026 AURELIA
         </span>
 
         <span>
